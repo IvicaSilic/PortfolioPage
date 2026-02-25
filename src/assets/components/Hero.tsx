@@ -51,16 +51,16 @@ export default function Hero({ darkMode, setDarkMode, transitioning, setTransiti
     >
       {/* BLACK OVERLAY */}
       <div
-        className={`fixed inset-0 z-[50] pointer-events-none bg-black transition-opacity ease-in-out ${
+        className={`fixed inset-0 z-50 pointer-events-none bg-black transition-opacity ease-in-out ${
           fadeToBlack 
-            ? "opacity-100 duration-[1100ms]" 
-            : "opacity-0 duration-[2200ms]" 
+            ? "opacity-100 duration-1100ms" 
+            : "opacity-0 duration-2200ms" 
         }`}
       />
 
       {/* LIGHTNING */}
       {showLightning && (
-        <div className="fixed inset-0 z-[60] pointer-events-none">
+        <div className="fixed inset-0 z-60 pointer-events-none">
           <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
              <polyline points="12,0 15,15 10,15 14,32 9,32 13,55 8,55 14,78 10,78 16,100" fill="none" stroke="white" strokeWidth="0.6" strokeLinecap="round" strokeLinejoin="round" style={{ filter: "drop-shadow(0 0 4px white) drop-shadow(0 0 10px #c084fc)", animation: "flicker1 1s ease-in-out" }} />
              <polyline points="35,10 31,28 37,28 32,48 39,48 34,68" fill="none" stroke="#fde68a" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" style={{ filter: "drop-shadow(0 0 5px #fde68a) drop-shadow(0 0 12px #f59e0b)", animation: "flicker2 1s ease-in-out" }} />

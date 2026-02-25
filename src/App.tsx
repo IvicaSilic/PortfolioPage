@@ -1,20 +1,24 @@
 import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./assets/components/NavBar";
-import Hero from "./assets/components/Hero";
 import Footer from "./assets/components/footer";
-import About from "./assets/components/About";
-import TetrisBoard from "./assets/components/About";
-
+import Home from "./pages/home";
+import JigsawPieces from "./assets/components/About";
+import Projects from "./assets/components/projects";
+import Aboutt from "./assets/components/ivica"
 export default function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
 
   return (
-    <div>
+    <BrowserRouter>
       <Navbar darkMode={darkMode} transitioning={transitioning} />
-      <Hero darkMode={darkMode} setDarkMode={setDarkMode} transitioning={transitioning} setTransitioning={setTransitioning} />
-      <TetrisBoard/>
+      <Routes>
+        <Route path="/" element={<Home darkMode={darkMode} setDarkMode={setDarkMode} transitioning={transitioning} setTransitioning={setTransitioning} />} />
+        <Route path="/about" element={<Aboutt />} />
+        <Route path="/projects" element={<Projects />} />
+      </Routes>
       <Footer darkMode={darkMode} />
-    </div>
+    </BrowserRouter>
   );
 }
