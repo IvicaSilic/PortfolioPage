@@ -1,24 +1,29 @@
-import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from "./assets/components/NavBar";
-import Footer from "./assets/components/footer";
-import Home from "./pages/home";
-import JigsawPieces from "./assets/components/About";
-import Projects from "./assets/components/projects";
-import Aboutt from "./assets/components/ivica"
-export default function App() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [transitioning, setTransitioning] = useState(false);
+import { Toaster } from "react-hot-toast";
 
+import Navbar from "./assets/components/NavBar";
+import Footer from "./assets/components/Footer";
+import Home from "./pages/home";
+import Projects from "./assets/components/projects";
+import About from "./assets/components/About";
+import Contact from "./assets/components/Contact";
+
+export default function App() {
   return (
     <BrowserRouter>
-      <Navbar darkMode={darkMode} transitioning={transitioning} />
-      <Routes>
-        <Route path="/" element={<Home darkMode={darkMode} setDarkMode={setDarkMode} transitioning={transitioning} setTransitioning={setTransitioning} />} />
-        <Route path="/about" element={<Aboutt />} />
-        <Route path="/projects" element={<Projects />} />
-      </Routes>
-      <Footer darkMode={darkMode} />
+      <Toaster position="top-center" />
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/contact" element={<Contact />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
     </BrowserRouter>
   );
 }
