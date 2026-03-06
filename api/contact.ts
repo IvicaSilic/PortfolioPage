@@ -8,6 +8,15 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const TO_EMAIL = process.env.CONTACT_TO_EMAIL!;
 const FROM_EMAIL = process.env.CONTACT_FROM_EMAIL!;
 
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 // ─── Rate limiting (in-memory, per IP) ───────────────────────────────────────
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -57,7 +66,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: "Method not allowed." });
   }
 
-  const ip = (req.headers["x-forwarded-for"] as string) ?? "unknown";
+  const forwardedFor = req.headers["x-forwarded-for"];
+  const ip = typeof forwardedFor === "string"
+    ? forwardedFor.split(",")[0]?.trim() || "unknown"
+    : "unknown";
 
   if (isRateLimited(ip)) {
     return res.status(429).json({ error: "Too many requests. Please wait a moment." });
@@ -68,6 +80,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const { name, email, message } = req.body;
+  const escapedName = escapeHtml(name);
+  const escapedEmail = escapeHtml(email);
+  const escapedMessage = escapeHtml(message).replace(/\n/g, "<br>");
 
   const { error } = await resend.emails.send({
     from: FROM_EMAIL,
@@ -81,15 +96,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
           <tr>
             <td style="padding: 8px 0; color: #737373; width: 80px;">Name</td>
-            <td style="padding: 8px 0;">${name}</td>
+            <td style="padding: 8px 0;">${escapedName}</td>
           </tr>
           <tr>
             <td style="padding: 8px 0; color: #737373;">Email</td>
-            <td style="padding: 8px 0;"><a href="mailto:${email}" style="color: #171717;">${email}</a></td>
+            <td style="padding: 8px 0;"><a href="mailto:${escapedEmail}" style="color: #171717;">${escapedEmail}</a></td>
           </tr>
         </table>
         <div style="background: #f5f5f5; border-radius: 8px; padding: 16px; white-space: pre-wrap; font-size: 14px; line-height: 1.6;">
-          ${message.replace(/\n/g, "<br>")}
+          ${escapedMessage}
         </div>
         <p style="margin-top: 24px; font-size: 12px; color: #a3a3a3;">Sent via contact form</p>
       </div>

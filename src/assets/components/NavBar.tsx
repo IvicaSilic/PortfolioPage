@@ -25,7 +25,7 @@ export default function Navbar() {
             <Link
               key={item.name}
               to={item.path}
-              className="transition-colors duration-300 hover:text-orange-500"
+              className="inline-block transition-transform transition-colors duration-300 hover:text-orange-500 hover:scale-110"
             >
               {item.name}
             </Link>
@@ -34,7 +34,7 @@ export default function Navbar() {
 
         <button
           onClick={() => setMenuOpen((prev) => !prev)}
-          className="md:hidden flex flex-col gap-1.5 p-2"
+          className="md:hidden flex flex-col gap-1.5 p-2 transition-transform duration-200 hover:scale-125"
           aria-label="Toggle menu"
         >
           <span className={`block w-6 h-0.5 bg-zinc-900 transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-2" : ""}`} />
@@ -50,7 +50,7 @@ export default function Navbar() {
               key={item.name}
               to={item.path}
               onClick={() => setMenuOpen(false)}
-              className="text-lg font-semibold transition-colors duration-300 hover:text-orange-500"
+              className="inline-block text-lg font-semibold transition-transform transition-colors duration-300 hover:text-orange-500 hover:scale-110"
             >
               {item.name}
             </Link>

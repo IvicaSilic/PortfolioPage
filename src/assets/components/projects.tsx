@@ -1,6 +1,6 @@
 export default function Projects() {
   return (
-    <div className="min-h-screen bg-neutral-950 text-white flex flex-col items-center gap-16 py-20">
+    <div className="min-h-screen bg-white text-zinc-900 flex flex-col items-center gap-16 py-20">
 
       <h1 className="text-4xl font-bold tracking-tight">
         Projekti
@@ -19,6 +19,9 @@ export default function Projects() {
             <iframe
               src="https://maca-miljenica-najamalatasplit.hr/"
               className="w-full h-full bg-white"
+              title="Project preview: Maca Miljenica"
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
             />
 
           </div>

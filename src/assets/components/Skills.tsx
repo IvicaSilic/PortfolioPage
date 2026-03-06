@@ -24,6 +24,7 @@ const MASK_OFFSET = PIECE_SIZE * 0.125;
 const BOARD_SIZE = INNER * 3;
 const GAP = 90;
 const PIECE_GAP = 42; // increased from 21
+const MOBILE_BREAKPOINT = 1024;
 
 
 /* ── Data ────────────────────────────────── */
@@ -181,6 +182,30 @@ function LaptopReveal({ onReset, visible }: { onReset: () => void; visible: bool
   );
 }
 
+function MobileSkillsSection() {
+  return (
+    <section className="bg-[#0f0f1a] text-white px-6 py-16">
+      <div className="mx-auto max-w-3xl">
+        <h2 className="text-3xl font-black tracking-tight">Skills</h2>
+        <p className="mt-2 text-sm text-zinc-400">
+          Core technologies I use to build responsive web applications.
+        </p>
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {PIECES.map((piece) => (
+            <div
+              key={piece.id}
+              className="rounded-xl border border-zinc-800 bg-zinc-900/70 px-3 py-2 text-center text-sm font-semibold"
+              style={{ boxShadow: `inset 0 0 0 1px ${piece.color}66` }}
+            >
+              {piece.label}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ── Jigsaw Piece ────────────────────────── */
 function JigsawPiece({ piece, position, isSnapped, containerRef, onPickUp, onDragMove, onDragRelease }: JigsawPieceProps) {
   const dragStart = useRef<DragStart | null>(null);
@@ -284,6 +309,9 @@ export default function JigsawSkills() {
   const [showLaptop, setShowLaptop] = useState(false);
   const [laptopVisible, setLaptopVisible] = useState(false);
   const [fading, setFading] = useState(false);
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined" && window.innerWidth < MOBILE_BREAKPOINT,
+  );
 
   const getBoardLeft = () => document.documentElement.clientWidth / 2 - BOARD_SIZE / 2;
   const getBoardTop  = () => document.documentElement.clientHeight / 2 - BOARD_SIZE / 2 - 60;
@@ -316,6 +344,17 @@ export default function JigsawSkills() {
   useEffect(() => {
     const img = new Image();
     img.src = screenshot;
+  }, []);
+
+  useEffect(() => {
+    const onResize = () => {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    };
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+    };
   }, []);
 
   const handleReset = () => {
@@ -366,6 +405,10 @@ export default function JigsawSkills() {
     }
     setPositions(prev => ({ ...prev, [id]: { x, y } }));
   };
+
+  if (isMobile) {
+    return <MobileSkillsSection />;
+  }
 
   return (
     <div style={{ background: "#0f0f1a", minHeight: "100vh" }}>
