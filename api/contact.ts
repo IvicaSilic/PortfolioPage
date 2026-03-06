@@ -45,12 +45,20 @@ interface ContactBody {
   name: string;
   email: string;
   message: string;
+  company?: string;
+  formStartedAt?: number;
 }
 
 function validate(body: unknown): body is ContactBody {
   if (!body || typeof body !== "object") return false;
 
-  const { name, email, message } = body as Record<string, unknown>;
+  const { name, email, message, company, formStartedAt } = body as Record<string, unknown>;
+
+  if (typeof company === "string" && company.trim().length > 0) return false;
+
+  if (typeof formStartedAt !== "number") return false;
+  const elapsedMs = Date.now() - formStartedAt;
+  if (elapsedMs < 2500 || elapsedMs > 1000 * 60 * 60) return false;
 
   if (typeof name !== "string" || name.trim().length < 2) return false;
   if (typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return false;

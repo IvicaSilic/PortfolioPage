@@ -11,6 +11,8 @@ interface ContactFormData {
   name: string;
   email: string;
   message: string;
+  company: string;
+  formStartedAt: number;
 }
 
 // ─── API ──────────────────────────────────────────────────────────────────────
@@ -26,10 +28,16 @@ async function sendMessage(data: ContactFormData): Promise<void> {
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
-const EMPTY_FORM: ContactFormData = { name: "", email: "", message: "" };
+const EMPTY_FORM = (): ContactFormData => ({
+  name: "",
+  email: "",
+  message: "",
+  company: "",
+  formStartedAt: Date.now(),
+});
 
 function useContactForm() {
-  const [fields, setFields] = useState<ContactFormData>(EMPTY_FORM);
+  const [fields, setFields] = useState<ContactFormData>(EMPTY_FORM());
   const [loading, setLoading] = useState(false);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -44,7 +52,7 @@ function useContactForm() {
     try {
       await sendMessage(fields);
       toast.success("Message sent!");
-      setFields(EMPTY_FORM);
+      setFields(EMPTY_FORM());
     } catch {
       toast.error("Something went wrong. Please try again.");
     } finally {
@@ -113,6 +121,16 @@ export default function Contact() {
             style={{ boxShadow: "0 1px 16px 0 rgba(0,0,0,0.06)" }}
           >
             <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-3.5">
+              <input
+                type="text"
+                name="company"
+                value={fields.company}
+                onChange={handleChange}
+                autoComplete="off"
+                tabIndex={-1}
+                aria-hidden="true"
+                className="hidden"
+              />
 
               <FormField id="name" label="Name" icon={UserIcon}>
                 <input
